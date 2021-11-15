@@ -2,53 +2,26 @@ package cz.tarantik.android_course.movieslist.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cz.tarantik.android_course.R
 import cz.tarantik.android_course.movieslist.adapter.MoviesListAdapter
-import cz.tarantik.android_course.movieslist.datasource.JsonMovieDataSource
 
-const val COUNTER_VALUE = "COUNTER_VALUE"
 class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
+    val viewModel: MoviesListViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val moviesAdapter = MoviesListAdapter()
-        val moviesDataSource = JsonMovieDataSource(activity?.applicationContext!!)
 
         requireView().findViewById<RecyclerView>(R.id.recycler_movies_list).apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = moviesAdapter
         }
-        moviesAdapter.submitList(moviesDataSource.getPopularMovies())
-
-        savedInstanceState?.let {
-            val tvCounter = requireView().findViewById<TextView>(R.id.tv_counter)
-            tvCounter.text = savedInstanceState.getInt(COUNTER_VALUE).toString()
-        }
-
-        requireView().findViewById<Button>(R.id.btn_counter).setOnClickListener {
-            val tvCounter = requireView().findViewById<TextView>(R.id.tv_counter)
-            val currentCount = getCounterValue()
-            tvCounter.text = currentCount.plus(1).toString()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        val currentCount = getCounterValue()
-
-        outState.putInt(COUNTER_VALUE, currentCount)
-    }
-
-    private fun getCounterValue():Int {
-        val tvCounter = requireView().findViewById<TextView>(R.id.tv_counter)
-        return if (tvCounter.text.isEmpty()) 0 else
-            tvCounter.text.toString().toInt()
+        viewModel.loadMovies()
+        moviesAdapter.submitList(viewModel.getMovies())
     }
 }
