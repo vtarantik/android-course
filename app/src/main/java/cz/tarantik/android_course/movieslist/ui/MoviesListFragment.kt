@@ -1,11 +1,13 @@
 package cz.tarantik.android_course.movieslist.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cz.tarantik.android_course.R
@@ -38,7 +40,11 @@ class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
         super.onViewCreated(view, savedInstanceState)
 
         requireView().findViewById<RecyclerView>(R.id.recycler_movies_list).apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                LinearLayoutManager(requireContext())
+            } else {
+                GridLayoutManager(requireContext(), 2)
+            }
             adapter = moviesAdapter
         }
     }
