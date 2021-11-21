@@ -6,6 +6,8 @@
         <entry key="../../../../../layout/custom_preview.xml" value="0.2453125" />
         <entry key="app/src/main/res/layout-land/item_movies_list.xml" value="0.22663139329805995" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.265625" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.14719202898550723" />
+        <entry key="app/src/main/res/layout/fragment_movie_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_movies_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_movies_list.xml" value="0.1" />
       </map>

@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cz.tarantik.android_course.R
 import cz.tarantik.android_course.MoviesApplication
+import cz.tarantik.android_course.R
 import cz.tarantik.android_course.movieslist.adapter.MoviesListAdapter
 import cz.tarantik.android_course.movieslist.domain.model.Movie
 import kotlinx.coroutines.flow.collect
@@ -22,7 +21,9 @@ class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
     private val viewModel: MoviesListViewModel by viewModels {
         MoviesListViewModelFactory((activity?.application as MoviesApplication).database.movieDao())
     }
-    private val moviesAdapter = MoviesListAdapter()
+    private val moviesAdapter = MoviesListAdapter{
+        (activity as MoviesListNavigator).showMovieDetail(it)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,5 +57,9 @@ class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
 
     private fun showMovies(movies: List<Movie>) {
         moviesAdapter.submitList(movies)
+    }
+
+    interface MoviesListNavigator {
+        fun showMovieDetail(id: Int)
     }
 }

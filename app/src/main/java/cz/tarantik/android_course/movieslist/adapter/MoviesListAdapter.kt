@@ -12,9 +12,10 @@ import coil.load
 import cz.tarantik.android_course.R
 import cz.tarantik.android_course.movieslist.domain.model.Movie
 
-class MoviesListAdapter :
+class MoviesListAdapter(private val onMovieClicked: (movieId: Int) -> Unit) :
     ListAdapter<Movie, MoviesListAdapter.MovieViewHolder>(MovieDiffCallback) {
-    class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class MovieViewHolder(private val view: View, private val onMovieClicked: (movieId: Int) -> Unit) :
+        RecyclerView.ViewHolder(view) {
         private val movieNameTextView: TextView? = view.findViewById(R.id.tv_movie_name)
         private val movieDescTextView: TextView? = view.findViewById(R.id.tv_movie_description)
         private val moviePosterImageView: ImageView = view.findViewById(R.id.iv_movie_poster)
@@ -23,13 +24,14 @@ class MoviesListAdapter :
             movieNameTextView?.text = movie.title
             movieDescTextView?.text = movie.overview
             moviePosterImageView.load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
+            view.setOnClickListener { onMovieClicked(movie.id) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_movies_list, parent, false)
-        return MovieViewHolder(view)
+        return MovieViewHolder(view, onMovieClicked)
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
