@@ -10,7 +10,9 @@
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.14719202898550723" />
         <entry key="app/src/main/res/layout/fragment_movie_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_movies_list.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_top_rated_movies.xml" value="0.26979166666666665" />
         <entry key="app/src/main/res/layout/item_movies_list.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.26979166666666665" />
       </map>
     </option>
   </component>

@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -65,14 +67,19 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
                     hideSystemUI()
                 } else {
                     player.exitFullScreen()
+                    showSystemUI()
                 }
             }
         })
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = movie.title
         poster?.load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
+
     }
 
 
     private fun hideSystemUI() {
+        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        toolbar?.visibility = View.GONE
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -85,5 +92,10 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
                         // Hide the nav bar and status bar
                         or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
+
+    private fun showSystemUI() {
+        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        toolbar?.visibility = View.VISIBLE
     }
 }

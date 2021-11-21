@@ -2,4 +2,6 @@
     <string name="app_name">android-course</string>
     <string name="hello_world">Hello world!</string>
     <string name="counter">counter</string>
+    <string name="popular">Popular</string>
+    <string name="top">Top rated</string>
 </resources>
