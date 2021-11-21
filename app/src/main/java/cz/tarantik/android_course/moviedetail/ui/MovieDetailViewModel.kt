@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDBEntity
 import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDao
 import cz.tarantik.android_course.moviedetail.domain.model.MovieDetail
-import cz.tarantik.android_course.movieslist.data.remote.MoviesApi
+import cz.tarantik.android_course.networking.MoviesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

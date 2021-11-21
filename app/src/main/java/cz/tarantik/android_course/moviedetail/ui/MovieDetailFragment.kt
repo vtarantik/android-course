@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import coil.load
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -80,6 +81,8 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
     private fun hideSystemUI() {
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.visibility = View.GONE
+        val bottomBar = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomBar?.visibility = View.GONE
         // Enables regular immersive mode.
         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -97,5 +100,7 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
     private fun showSystemUI() {
         val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         toolbar?.visibility = View.VISIBLE
+        val bottomBar = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomBar?.visibility = View.VISIBLE
     }
 }

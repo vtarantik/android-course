@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cz.tarantik.android_course.movieslist.data.entity.PopularMovieEntity
 import cz.tarantik.android_course.movieslist.data.local.MovieDao
 import cz.tarantik.android_course.movieslist.data.mapper.PopularMovieMapper
-import cz.tarantik.android_course.movieslist.data.remote.MoviesApi
+import cz.tarantik.android_course.networking.MoviesApi
 import cz.tarantik.android_course.movieslist.domain.model.Movie
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

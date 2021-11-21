@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/moviesListFragment"
         android:name="cz.tarantik.android_course.movieslist.ui.MoviesListFragment"
-        android:label="Movies" >
+        android:label="Popular" >
         <action
             android:id="@+id/action_moviesListFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
@@ -24,6 +24,10 @@
 
     <fragment
         android:id="@+id/topRatedMoviesFragment"
-        android:name="cz.tarantik.android_course.topratedmovies.TopRatedMoviesFragment"
-        android:label="TopRatedMoviesFragment" />
+        android:name="cz.tarantik.android_course.topratedmovies.ui.TopRatedMoviesFragment"
+        android:label="Top rated" >
+        <action
+            android:id="@+id/action_topRatedMoviesFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
 </navigation>

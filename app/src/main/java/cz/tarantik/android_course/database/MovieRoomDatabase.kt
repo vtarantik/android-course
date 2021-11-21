@@ -9,12 +9,15 @@ import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDBEntity
 import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDao
 import cz.tarantik.android_course.movieslist.data.entity.PopularMovieEntity
 import cz.tarantik.android_course.movieslist.data.local.MovieDao
+import cz.tarantik.android_course.topratedmovies.data.entity.TopRatedMovieEntity
+import cz.tarantik.android_course.topratedmovies.data.local.TopRatedMoviesDao
 
-@Database(entities = [PopularMovieEntity::class, MovieDetailDBEntity::class], version = 2, exportSchema = false)
+@Database(entities = [PopularMovieEntity::class, MovieDetailDBEntity::class, TopRatedMovieEntity::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class MovieRoomDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
     abstract fun movieDetailDao(): MovieDetailDao
+    abstract fun topRatedMoviesDao(): TopRatedMoviesDao
 
     companion object {
         @Volatile
