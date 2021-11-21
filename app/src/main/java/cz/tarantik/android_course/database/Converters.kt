@@ -2,7 +2,7 @@ package cz.tarantik.android_course.database
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.Types
-import cz.tarantik.android_course.movieslist.data.remote.MoviesApi.moshi
+import cz.tarantik.android_course.networking.MoviesApi.moshi
 
 class Converters {
     @TypeConverter

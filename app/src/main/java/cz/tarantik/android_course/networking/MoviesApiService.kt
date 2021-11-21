@@ -1,4 +1,4 @@
-package cz.tarantik.android_course.movieslist.data.remote
+package cz.tarantik.android_course.networking
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -6,6 +6,7 @@ import cz.tarantik.android_course.BuildConfig
 import cz.tarantik.android_course.moviedetail.data.remote.MovieDetailEntity
 import cz.tarantik.android_course.moviedetail.data.remote.VideosResponseEntity
 import cz.tarantik.android_course.movieslist.data.entity.PopularMoviesResponseEntity
+import cz.tarantik.android_course.topratedmovies.data.entity.TopRatedMoviesResponseEntity
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -66,4 +67,7 @@ interface MoviesApiService {
 
     @GET("movie/{movieId}/videos")
     suspend fun getVideos(@Path("movieId") movieId: Int): VideosResponseEntity
+
+    @GET("movie/top_rated")
+    suspend fun getTopRatedMovies(@Query("page") page: Int = 1): TopRatedMoviesResponseEntity
 }
