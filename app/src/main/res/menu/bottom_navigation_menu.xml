@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/moviesListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_flame"
+        android:title="@string/popular"/>
+    <item
+        android:id="@+id/topRatedMoviesFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_star"
+        android:title="@string/top"/>
+</menu>
