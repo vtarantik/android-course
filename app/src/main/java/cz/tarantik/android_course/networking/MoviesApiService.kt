@@ -3,8 +3,8 @@ package cz.tarantik.android_course.movieslist.data.remote
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import cz.tarantik.android_course.BuildConfig
-import cz.tarantik.android_course.moviedetail.data.entity.MovieDetailEntity
-import cz.tarantik.android_course.moviedetail.data.entity.VideosResponseEntity
+import cz.tarantik.android_course.moviedetail.data.remote.MovieDetailEntity
+import cz.tarantik.android_course.moviedetail.data.remote.VideosResponseEntity
 import cz.tarantik.android_course.movieslist.data.entity.PopularMoviesResponseEntity
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

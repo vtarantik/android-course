@@ -1,4 +1,4 @@
-package cz.tarantik.android_course.moviedetail.data.entity
+package cz.tarantik.android_course.moviedetail.data.remote
 
 import com.squareup.moshi.Json
 

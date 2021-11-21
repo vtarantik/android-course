@@ -1,4 +1,4 @@
-package cz.tarantik.android_course.movieslist.data.local
+package cz.tarantik.android_course.database
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.Types
