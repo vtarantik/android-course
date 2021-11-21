@@ -14,6 +14,7 @@ import coil.load
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import cz.tarantik.android_course.MoviesApplication
 import cz.tarantik.android_course.R
 import cz.tarantik.android_course.moviedetail.domain.model.MovieDetail
 import kotlinx.coroutines.flow.collect
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
     val args: MovieDetailFragmentArgs by navArgs()
     private val viewModel: MovieDetailViewModel by viewModels {
-        MovieDetailViewModelFactory(args.movieId)
+        MovieDetailViewModelFactory((activity?.application as MoviesApplication).database.movieDetailDao(), args.movieId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,6 +40,11 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        view?.findViewById<YouTubePlayerView>(R.id.player)?.release()
     }
 
     private fun showDetail(movie: MovieDetail) {
