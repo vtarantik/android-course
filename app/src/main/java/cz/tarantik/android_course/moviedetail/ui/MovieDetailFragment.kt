@@ -3,9 +3,9 @@ package cz.tarantik.android_course.moviedetail.ui
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -19,6 +19,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import cz.tarantik.android_course.MoviesApplication
 import cz.tarantik.android_course.R
+import cz.tarantik.android_course.databinding.FragmentMovieDetailBinding
 import cz.tarantik.android_course.moviedetail.domain.model.MovieDetail
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -26,7 +27,22 @@ import kotlinx.coroutines.launch
 class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
     val args: MovieDetailFragmentArgs by navArgs()
     private val viewModel: MovieDetailViewModel by viewModels {
-        MovieDetailViewModelFactory((activity?.application as MoviesApplication).database.movieDetailDao(), args.movieId)
+        MovieDetailViewModelFactory(
+            (activity?.application as MoviesApplication).database.movieDetailDao(),
+            args.movieId
+        )
+    }
+
+    private var _binding: FragmentMovieDetailBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,35 +61,31 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
         view?.findViewById<YouTubePlayerView>(R.id.player)?.release()
     }
 
     private fun showDetail(movie: MovieDetail) {
-        val tvMovieTitle = requireView().findViewById<TextView?>(R.id.tv_movie_title)
-        val tvMovieDescription = requireView().findViewById<TextView?>(R.id.tv_movie_description)
-        val player = requireView().findViewById<YouTubePlayerView>(R.id.player)
-        val poster = requireView().findViewById<ImageView>(R.id.iv_movie_poster)
-
-        tvMovieTitle?.text = movie.title
-        tvMovieDescription?.text = movie.overview
-        player.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+        binding.tvMovieTitle?.text = movie.title
+        binding.tvMovieDescription?.text = movie.overview
+        binding.player.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 super.onReady(youTubePlayer)
                 Log.d("YTP", "Playing video: ${movie.videoId}")
                 youTubePlayer.loadVideo(movie.videoId, 0F)
                 if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    player.enterFullScreen()
+                    binding.player.enterFullScreen()
                     hideSystemUI()
                 } else {
-                    player.exitFullScreen()
+                    binding.player.exitFullScreen()
                     showSystemUI()
                 }
             }
         })
         (requireActivity() as AppCompatActivity).supportActionBar?.title = movie.title
-        poster?.load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
+        binding.ivMoviePoster?.load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
 
     }
 

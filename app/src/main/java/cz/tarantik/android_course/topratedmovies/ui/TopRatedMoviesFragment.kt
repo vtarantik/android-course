@@ -3,18 +3,20 @@ package cz.tarantik.android_course.topratedmovies.ui
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cz.tarantik.android_course.MoviesApplication
 import cz.tarantik.android_course.R
+import cz.tarantik.android_course.databinding.FragmentTopRatedMoviesBinding
+import cz.tarantik.android_course.movieslist.adapter.MoviesListAdapter
 import cz.tarantik.android_course.movieslist.domain.model.Movie
-import cz.tarantik.android_course.topratedmovies.adapter.TopRatedMoviesAdapter
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -22,10 +24,13 @@ class TopRatedMoviesFragment : Fragment(R.layout.fragment_top_rated_movies) {
     private val viewModel: TopRatedMoviesViewModel by viewModels {
         TopRatedMoviesViewModelFactory((activity?.application as MoviesApplication).database.topRatedMoviesDao())
     }
-    private val moviesAdapter = TopRatedMoviesAdapter {
+    private val moviesAdapter = MoviesListAdapter {
         val action = TopRatedMoviesFragmentDirections.actionTopRatedMoviesFragmentToMovieDetailFragment(it)
         findNavController().navigate(action)
     }
+
+    private var _binding: FragmentTopRatedMoviesBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +49,19 @@ class TopRatedMoviesFragment : Fragment(R.layout.fragment_top_rated_movies) {
         }
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentTopRatedMoviesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireView().findViewById<RecyclerView>(R.id.recycler_movies_list).apply {
+        binding.recyclerMoviesList?.apply {
             layoutManager =
                 if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     LinearLayoutManager(requireContext())
@@ -56,6 +70,11 @@ class TopRatedMoviesFragment : Fragment(R.layout.fragment_top_rated_movies) {
                 }
             adapter = moviesAdapter
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showMovies(movies: List<Movie>) {

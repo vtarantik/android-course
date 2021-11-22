@@ -1,37 +1,39 @@
 package cz.tarantik.android_course.movieslist.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import cz.tarantik.android_course.R
+import cz.tarantik.android_course.databinding.ItemMoviesListBinding
 import cz.tarantik.android_course.movieslist.domain.model.Movie
 
 class MoviesListAdapter(private val onMovieClicked: (movieId: Int) -> Unit) :
     ListAdapter<Movie, MoviesListAdapter.MovieViewHolder>(MovieDiffCallback) {
-    class MovieViewHolder(private val view: View, private val onMovieClicked: (movieId: Int) -> Unit) :
-        RecyclerView.ViewHolder(view) {
-        private val movieNameTextView: TextView? = view.findViewById(R.id.tv_movie_name)
-        private val movieDescTextView: TextView? = view.findViewById(R.id.tv_movie_description)
-        private val moviePosterImageView: ImageView = view.findViewById(R.id.iv_movie_poster)
+
+    class MovieViewHolder(
+        private val binding: ItemMoviesListBinding,
+        private val onMovieClicked: (movieId: Int) -> Unit
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: Movie) {
-            movieNameTextView?.text = movie.title
-            movieDescTextView?.text = movie.overview
-            moviePosterImageView.load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
-            view.setOnClickListener { onMovieClicked(movie.id) }
+            binding.tvMovieName?.text = movie.title
+            binding.tvMovieDescription?.text = movie.overview
+            binding.ivMoviePoster.load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
+            binding.root.setOnClickListener { onMovieClicked(movie.id) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_movies_list, parent, false)
-        return MovieViewHolder(view, onMovieClicked)
+        return MovieViewHolder(
+            ItemMoviesListBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), onMovieClicked
+        )
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
