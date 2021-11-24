@@ -11,7 +11,7 @@ class PopularMovieMapper : Mapper<Movie, PopularMovieEntity> {
             entity.title,
             entity.overview,
             entity.releaseDate,
-            entity.posterPath
+            entity.posterPath,
         )
     }
 
