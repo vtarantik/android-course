@@ -49,7 +49,7 @@ class MovieDetailViewModel(val movieDetailDao: MovieDetailDao, movieId: Int) : V
             } catch (e: IOException) {
                 val movieDetail = movieDetailDao.getMovieDetail(movieId)
                 if (movieDetail != null) {
-                    _uiState.value = MovieDetailUiState.Success(
+                    _uiState.value = MovieDetailUiState.Offline(
                         MovieDetail(
                             movieDetail.title,
                             movieDetail.overview,
@@ -68,5 +68,6 @@ class MovieDetailViewModel(val movieDetailDao: MovieDetailDao, movieId: Int) : V
 sealed class MovieDetailUiState {
     data class Success(val movie: MovieDetail) : MovieDetailUiState()
     data class Error(val exception: Throwable) : MovieDetailUiState()
+    data class Offline(val movie: MovieDetail) : MovieDetailUiState()
     object Empty : MovieDetailUiState()
 }

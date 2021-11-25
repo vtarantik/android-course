@@ -1,11 +1,13 @@
 package cz.tarantik.android_course.moviedetail.ui
 
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -47,15 +49,29 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.groupOffline.visibility = View.GONE
+
         lifecycleScope.launch {
             viewModel.uiState.collect { value ->
                 when (value) {
-                    is MovieDetailUiState.Success -> showDetail(value.movie)
+                    is MovieDetailUiState.Success -> {
+                        binding.groupOffline.visibility = View.GONE
+                        binding.player.visibility = View.VISIBLE
+                        showDetail(value.movie)
+                    }
                     is MovieDetailUiState.Error -> Log.e(
                         "MoviesListFragment",
                         value.exception.message.toString()
                     )
-                    is MovieDetailUiState.Empty -> Log.d("MDF", "Data empty")
+                    is MovieDetailUiState.Empty -> {
+                        Log.d("MDF", "Data empty")
+                    }
+                    is MovieDetailUiState.Offline -> {
+                        binding.groupOffline.visibility = View.VISIBLE
+                        binding.player.visibility = View.INVISIBLE
+                        showDetail(value.movie)
+                    }
                 }
             }
         }
@@ -95,18 +111,10 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
         toolbar?.visibility = View.GONE
         val bottomBar = activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomBar?.visibility = View.GONE
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        activity?.window?.decorView?.systemUiVisibility = (
-                // Set the content to appear under the system bars so that the
-                // content doesn't resize when the system bars hide and show.
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+        if (Build.VERSION.SDK_INT >= 30) {
+            binding.player.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+        }
     }
 
     private fun showSystemUI() {

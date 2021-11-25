@@ -32,23 +32,6 @@ class TopRatedMoviesFragment : Fragment(R.layout.fragment_top_rated_movies) {
     private var _binding: FragmentTopRatedMoviesBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        lifecycleScope.launch {
-            viewModel.uiState.collect { value ->
-                when (value) {
-                    is TopRatedMoviesUiState.Success -> showMovies(value.movies)
-                    is TopRatedMoviesUiState.Error -> Log.e(
-                        "TopRatedMoviesFragment",
-                        value.exception.message.toString()
-                    )
-                }
-
-            }
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,6 +43,27 @@ class TopRatedMoviesFragment : Fragment(R.layout.fragment_top_rated_movies) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launch {
+            viewModel.uiState.collect { value ->
+                when (value) {
+                    is TopRatedMoviesUiState.Success -> {
+                        binding.layoutEmpty.root.visibility = View.GONE
+                        binding.recyclerMoviesList.visibility = View.VISIBLE
+                        showMovies(value.movies)
+                    }
+                    is TopRatedMoviesUiState.Error -> {
+                        Log.e(
+                            "TopRatedMoviesFragment",
+                            value.exception.message.toString()
+                        )
+                        binding.layoutEmpty.root.visibility = View.VISIBLE
+                        binding.recyclerMoviesList.visibility = View.GONE
+                    }
+                }
+
+            }
+        }
 
         binding.recyclerMoviesList?.apply {
             layoutManager =
