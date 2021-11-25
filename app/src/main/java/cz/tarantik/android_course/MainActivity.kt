@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import cz.tarantik.android_course.movieslist.ui.FragmentMoviesList
+import cz.tarantik.android_course.movieslist.ui.MoviesListFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add<FragmentMoviesList>(R.id.container)
+                add<MoviesListFragment>(R.id.container)
             }
         }
     }
