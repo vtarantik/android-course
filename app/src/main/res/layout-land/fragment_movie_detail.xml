@@ -8,9 +8,39 @@
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:showFullScreenButton="false" />
+
+    <TextView
+        android:id="@+id/tv_trailer_cant_be_played"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/trailer_unavailable"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@id/iv_no_wifi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/iv_no_wifi"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_no_wifi"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tv_trailer_cant_be_played"
+        app:layout_constraintStart_toStartOf="@id/tv_trailer_cant_be_played"
+        app:layout_constraintTop_toBottomOf="@id/tv_trailer_cant_be_played" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_offline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_trailer_cant_be_played,iv_no_wifi" />
 </androidx.constraintlayout.widget.ConstraintLayout>

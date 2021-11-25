@@ -32,22 +32,6 @@ class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
     private var _binding: FragmentMoviesListBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        lifecycleScope.launch {
-            viewModel.uiState.collect { value ->
-                when (value) {
-                    is MoviesListUiState.Success -> showMovies(value.movies)
-                    is MoviesListUiState.Error -> Log.e(
-                        "MoviesListFragment",
-                        value.exception.message.toString()
-                    )
-                }
-            }
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,6 +43,26 @@ class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launch {
+            viewModel.uiState.collect { value ->
+                when (value) {
+                    is MoviesListUiState.Success -> {
+                        binding.layoutEmpty.root.visibility = View.GONE
+                        binding.recyclerMoviesList.visibility = View.VISIBLE
+                        showMovies(value.movies)
+                    }
+                    is MoviesListUiState.Error -> {
+                        Log.e(
+                            "MoviesListFragment",
+                            value.exception.message.toString()
+                        )
+                        binding.layoutEmpty.root.visibility = View.VISIBLE
+                        binding.recyclerMoviesList.visibility = View.GONE
+                    }
+                }
+            }
+        }
 
         binding.recyclerMoviesList.apply {
             layoutManager =

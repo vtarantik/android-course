@@ -4,4 +4,6 @@
     <string name="counter">counter</string>
     <string name="popular">Popular</string>
     <string name="top">Top rated</string>
+    <string name="trailer_unavailable">Trailer can\'t be played</string>
+    <string name="no_data">No data to display!</string>
 </resources>
