@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "android-course"
 include ':app'
+include ':androidcoursecompose'
