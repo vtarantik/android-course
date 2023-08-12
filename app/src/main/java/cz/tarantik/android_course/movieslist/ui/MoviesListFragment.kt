@@ -9,25 +9,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cz.tarantik.android_course.MoviesApplication
 import cz.tarantik.android_course.R
 import cz.tarantik.android_course.databinding.FragmentMoviesListBinding
+import cz.tarantik.android_course.moviedetail.ui.MovieDetailActivity
 import cz.tarantik.android_course.movieslist.adapter.MoviesListAdapter
 import cz.tarantik.android_course.movieslist.domain.model.Movie
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
     private val viewModel: MoviesListViewModel by viewModels {
         MoviesListViewModelFactory((activity?.application as MoviesApplication).database.movieDao())
     }
-    private val moviesAdapter = MoviesListAdapter {
-        val action = MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailFragment(it)
-        findNavController().navigate(action)
+    private val moviesAdapter = MoviesListAdapter { id ->
+        context?.let { startActivity(MovieDetailActivity.newIntent(it, id)) }
     }
     private var _binding: FragmentMoviesListBinding? = null
     private val binding get() = _binding!!
@@ -52,6 +49,7 @@ class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
                         binding.recyclerMoviesList.visibility = View.VISIBLE
                         showMovies(value.movies)
                     }
+
                     is MoviesListUiState.Error -> {
                         Log.e(
                             "MoviesListFragment",

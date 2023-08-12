@@ -8,26 +8,11 @@
         android:id="@+id/moviesListFragment"
         android:name="cz.tarantik.android_course.movieslist.ui.MoviesListFragment"
         android:label="Popular" >
-        <action
-            android:id="@+id/action_moviesListFragment_to_movieDetailFragment"
-            app:destination="@id/movieDetailFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/movieDetailFragment"
-        android:name="cz.tarantik.android_course.moviedetail.ui.MovieDetailFragment"
-        android:label="MovieDetailFragment" >
-
-        <argument
-            android:name="movieId"
-            app:argType="integer"/>
     </fragment>
 
     <fragment
         android:id="@+id/topRatedMoviesFragment"
         android:name="cz.tarantik.android_course.topratedmovies.ui.TopRatedMoviesFragment"
         android:label="Top rated" >
-        <action
-            android:id="@+id/action_topRatedMoviesFragment_to_movieDetailFragment"
-            app:destination="@id/movieDetailFragment" />
     </fragment>
 </navigation>

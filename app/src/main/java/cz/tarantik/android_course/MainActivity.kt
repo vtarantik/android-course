@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cz.tarantik.android_course.databinding.ActivityMainBinding
@@ -21,15 +22,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        setupActionBarWithNavController(navController)
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.moviesListFragment,
+                R.id.topRatedMoviesFragment,
+            )
+        )
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
         setupBottomNavMenu(navController)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
-    }
-
     private fun setupBottomNavMenu(navController: NavController) {
-        binding.bottomNavigation?.setupWithNavController(navController)
+        binding.bottomNavigation.setupWithNavController(navController)
     }
 }

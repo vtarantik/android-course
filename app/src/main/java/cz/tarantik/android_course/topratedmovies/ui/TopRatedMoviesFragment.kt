@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cz.tarantik.android_course.MoviesApplication
 import cz.tarantik.android_course.R
 import cz.tarantik.android_course.databinding.FragmentTopRatedMoviesBinding
+import cz.tarantik.android_course.moviedetail.ui.MovieDetailActivity
 import cz.tarantik.android_course.movieslist.adapter.MoviesListAdapter
 import cz.tarantik.android_course.movieslist.domain.model.Movie
 import kotlinx.coroutines.flow.collect
@@ -24,9 +25,8 @@ class TopRatedMoviesFragment : Fragment(R.layout.fragment_top_rated_movies) {
     private val viewModel: TopRatedMoviesViewModel by viewModels {
         TopRatedMoviesViewModelFactory((activity?.application as MoviesApplication).database.topRatedMoviesDao())
     }
-    private val moviesAdapter = MoviesListAdapter {
-        val action = TopRatedMoviesFragmentDirections.actionTopRatedMoviesFragmentToMovieDetailFragment(it)
-        findNavController().navigate(action)
+    private val moviesAdapter = MoviesListAdapter { id ->
+        context?.let { startActivity(MovieDetailActivity.newIntent(it, id)) }
     }
 
     private var _binding: FragmentTopRatedMoviesBinding? = null
@@ -65,7 +65,7 @@ class TopRatedMoviesFragment : Fragment(R.layout.fragment_top_rated_movies) {
             }
         }
 
-        binding.recyclerMoviesList?.apply {
+        binding.recyclerMoviesList.apply {
             layoutManager =
                 if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     LinearLayoutManager(requireContext())

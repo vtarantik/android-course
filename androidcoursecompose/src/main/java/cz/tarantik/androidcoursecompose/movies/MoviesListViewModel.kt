@@ -1,7 +1,6 @@
 package cz.tarantik.androidcoursecompose.movies
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cz.tarantik.android_course.base.BaseViewModel
 import cz.tarantik.androidcoursecompose.core.api.MoviesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,14 +11,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviesListViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository
-): ViewModel() {
+): BaseViewModel() {
 
     private val _uiState = MutableStateFlow(MoviesListUiState(loading = true))
     val uiState = _uiState.asStateFlow()
 
 
     init {
-        viewModelScope.launch {
+        launch {
             val movies = moviesRepository.getMovies()
             _uiState.value = MoviesListUiState(moviesList = movies)
         }

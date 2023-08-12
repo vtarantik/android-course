@@ -27,14 +27,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
-    val args: MovieDetailFragmentArgs by navArgs()
-    private val viewModel: MovieDetailViewModel by viewModels {
-        MovieDetailViewModelFactory(
-            (activity?.application as MoviesApplication).database.movieDetailDao(),
-            args.movieId
-        )
-    }
-
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
 
@@ -49,6 +41,15 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val movieId = activity?.intent?.extras?.getInt(ARG_MOVIE_ID) ?: 0
+
+        val viewModel: MovieDetailViewModel by viewModels {
+            MovieDetailViewModelFactory(
+                (activity?.application as MoviesApplication).database.movieDetailDao(),
+                movieId
+            )
+        }
 
         binding.groupOffline.visibility = View.GONE
 

@@ -1,7 +1,6 @@
 package cz.tarantik.android_course.moviedetail.ui
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cz.tarantik.android_course.base.BaseViewModel
 import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDBEntity
 import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDao
 import cz.tarantik.android_course.moviedetail.domain.model.MovieDetail
@@ -11,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class MovieDetailViewModel(val movieDetailDao: MovieDetailDao, movieId: Int) : ViewModel() {
+class MovieDetailViewModel(val movieDetailDao: MovieDetailDao, movieId: Int) : BaseViewModel() {
     // Backing property to avoid state updates from other classes
     private val _uiState =
         MutableStateFlow<MovieDetailUiState>(MovieDetailUiState.Empty)
@@ -24,7 +23,7 @@ class MovieDetailViewModel(val movieDetailDao: MovieDetailDao, movieId: Int) : V
     }
 
     private fun getMovieDetails(movieId: Int) {
-        viewModelScope.launch {
+        launch {
             try {
                 val movieResponse = MoviesApi.retrofitService.getMovieDetail(movieId)
                 val videosResponse = MoviesApi.retrofitService.getVideos(movieId)

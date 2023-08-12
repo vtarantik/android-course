@@ -8,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface MovieDetailDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(movieDetail: MovieDetailDBEntity)
+    fun insert(movieDetail: MovieDetailDBEntity)
 
     @Query("SELECT * from movie_detail WHERE id = :id")
-    suspend fun getMovieDetail(id: Int): MovieDetailDBEntity?
+    fun getMovieDetail(id: Int): MovieDetailDBEntity?
 }

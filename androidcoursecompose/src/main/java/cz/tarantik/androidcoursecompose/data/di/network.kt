@@ -69,7 +69,7 @@ private fun provideQueryInterceptor(): Interceptor = Interceptor { chain ->
     val originalHttpUrl = original.url
 
     val url = originalHttpUrl.newBuilder()
-        .addQueryParameter("api_key", "5e7984851d42c7b8929f14cedf753ed9")
+        .addQueryParameter("api_key", BuildConfig.API_KEY)
         .build()
 
     // Request customization: add request headers

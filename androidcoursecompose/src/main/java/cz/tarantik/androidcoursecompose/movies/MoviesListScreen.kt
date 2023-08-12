@@ -3,8 +3,9 @@ package cz.tarantik.androidcoursecompose.movies
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.runtime.Composable
@@ -30,7 +31,7 @@ fun MoviesListScreen(moviesListViewModel: MoviesListViewModel = viewModel()) {
 @Composable
 fun MoviesList(movies: List<Movie>) {
     LazyVerticalGrid(
-        cells = GridCells.Fixed(2)
+        columns = GridCells.Fixed(2)
     ) {
         items(movies){ movie ->
             MovieItem(movie = movie)
