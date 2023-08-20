@@ -11,24 +11,23 @@ import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-import cz.tarantik.android_course.MoviesApplication
 import cz.tarantik.android_course.R
 import cz.tarantik.android_course.databinding.FragmentMovieDetailBinding
 import cz.tarantik.android_course.moviedetail.domain.model.MovieDetail
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var videoId: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,14 +41,11 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d("ASD", "onViewCreated")
+
         val movieId = activity?.intent?.extras?.getInt(ARG_MOVIE_ID) ?: 0
 
-        val viewModel: MovieDetailViewModel by viewModels {
-            MovieDetailViewModelFactory(
-                (activity?.application as MoviesApplication).database.movieDetailDao(),
-                movieId
-            )
-        }
+        val viewModel: MovieDetailViewModel by viewModel { parametersOf(movieId) }
 
         binding.groupOffline.visibility = View.GONE
 
@@ -57,17 +53,22 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
             viewModel.uiState.collect { value ->
                 when (value) {
                     is MovieDetailUiState.Success -> {
+                        Log.d("ASD", "data load success")
                         binding.groupOffline.visibility = View.GONE
                         binding.player.visibility = View.VISIBLE
+                        videoId = value.movie.videoId
                         showDetail(value.movie)
                     }
+
                     is MovieDetailUiState.Error -> Log.e(
                         "MoviesListFragment",
                         value.exception.message.toString()
                     )
+
                     is MovieDetailUiState.Empty -> {
                         Log.d("MDF", "Data empty")
                     }
+
                     is MovieDetailUiState.Offline -> {
                         binding.groupOffline.visibility = View.VISIBLE
                         binding.player.visibility = View.INVISIBLE
@@ -80,30 +81,37 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.player.release()
         _binding = null
-        view?.findViewById<YouTubePlayerView>(R.id.player)?.release()
+    }
+
+    override fun onConfigurationChanged(configuration: Configuration) {
+        super.onConfigurationChanged(configuration)
+
+        // Checks the orientation of the screen
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            hideSystemUI()
+
+        } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            showSystemUI()
+        }
     }
 
     private fun showDetail(movie: MovieDetail) {
         binding.tvMovieTitle?.text = movie.title
         binding.tvMovieDescription?.text = movie.overview
+
         binding.player.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 super.onReady(youTubePlayer)
                 Log.d("YTP", "Playing video: ${movie.videoId}")
                 youTubePlayer.loadVideo(movie.videoId, 0F)
-                if (activity?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    binding.player.enterFullScreen()
-                    hideSystemUI()
-                } else {
-                    binding.player.exitFullScreen()
-                    showSystemUI()
-                }
             }
         })
+
+        lifecycle.addObserver(binding.player)
         (requireActivity() as AppCompatActivity).supportActionBar?.title = movie.title
         binding.ivMoviePoster?.load("https://image.tmdb.org/t/p/w500${movie.posterPath}")
-
     }
 
 

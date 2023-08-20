@@ -36,5 +36,7 @@ abstract class MovieRoomDatabase : RoomDatabase() {
                 return instance
             }
         }
+
+        const val Name = "MovieDB"
     }
 }
