@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.Androidcourse.NoActionBar">
+    <style name="Theme.Androidcourse.NoActionBar" parent="Theme.Androidcourse">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

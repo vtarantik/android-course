@@ -17,6 +17,7 @@ import cz.tarantik.android_course.databinding.FragmentMoviesListBinding
 import cz.tarantik.android_course.moviedetail.ui.MovieDetailActivity
 import cz.tarantik.android_course.movieslist.adapter.MoviesListAdapter
 import cz.tarantik.android_course.movieslist.domain.model.Movie
+import cz.tarantik.android_course.scanner.ScannerActivity
 import kotlinx.coroutines.launch
 
 class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
@@ -24,7 +25,7 @@ class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
         MoviesListViewModelFactory((activity?.application as MoviesApplication).database.movieDao())
     }
     private val moviesAdapter = MoviesListAdapter { id ->
-        context?.let { startActivity(MovieDetailActivity.newIntent(it, id)) }
+        context?.let { startActivity( MovieDetailActivity.newIntent(it, id))}
     }
     private var _binding: FragmentMoviesListBinding? = null
     private val binding get() = _binding!!
