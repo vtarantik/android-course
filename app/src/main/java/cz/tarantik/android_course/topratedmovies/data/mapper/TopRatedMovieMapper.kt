@@ -1,11 +1,12 @@
 package cz.tarantik.android_course.topratedmovies.data.mapper
 
+import cz.tarantik.android_course.movieslist.data.mapper.Mapper
 import cz.tarantik.android_course.movieslist.data.mapper.UnsupportedMappingException
 import cz.tarantik.android_course.movieslist.domain.model.Movie
 import cz.tarantik.android_course.topratedmovies.data.entity.TopRatedMovieEntity
 
 class TopRatedMovieMapper :
-    cz.tarantik.android_course.movieslist.data.mapper.Mapper<Movie, TopRatedMovieEntity> {
+    Mapper<Movie, TopRatedMovieEntity> {
     override fun mapToDomain(entity: TopRatedMovieEntity): Movie {
         return Movie(
             entity.backdropPath,
