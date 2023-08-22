@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class MoviesListViewModel(private val movieDao: MovieDao) : BaseViewModel() {
+class MoviesListViewModel(
+    private val movieDao: MovieDao
+) : BaseViewModel() {
 
     // Backing property to avoid state updates from other classes
     private val _uiState =

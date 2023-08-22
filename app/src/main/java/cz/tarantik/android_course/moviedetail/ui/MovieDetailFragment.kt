@@ -28,6 +28,11 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
     private val binding get() = _binding!!
 
     private lateinit var videoId: String
+    val viewModel: MovieDetailViewModel by viewModel {
+        parametersOf(
+            activity?.intent?.getIntExtra(ARG_MOVIE_ID, -1)
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,10 +47,6 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("ASD", "onViewCreated")
-
-        val movieId = activity?.intent?.extras?.getInt(ARG_MOVIE_ID) ?: 0
-
-        val viewModel: MovieDetailViewModel by viewModel { parametersOf(movieId) }
 
         binding.groupOffline.visibility = View.GONE
 

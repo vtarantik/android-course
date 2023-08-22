@@ -19,11 +19,11 @@ import cz.tarantik.android_course.movieslist.adapter.MoviesListAdapter
 import cz.tarantik.android_course.movieslist.domain.model.Movie
 import cz.tarantik.android_course.scanner.ScannerActivity
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
-    private val viewModel: MoviesListViewModel by viewModels {
-        MoviesListViewModelFactory((activity?.application as MoviesApplication).database.movieDao())
-    }
+    private val viewModel: MoviesListViewModel by viewModel()
+
     private val moviesAdapter = MoviesListAdapter { id ->
         context?.let { startActivity( MovieDetailActivity.newIntent(it, id))}
     }

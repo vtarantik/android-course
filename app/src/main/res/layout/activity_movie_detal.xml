@@ -13,6 +13,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ToolBarStyle"
+        app:navigationIcon="@drawable/ic_flame"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <androidx.fragment.app.FragmentContainerView
