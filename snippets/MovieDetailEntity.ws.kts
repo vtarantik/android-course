@@ -1,5 +1,3 @@
-import com.squareup.moshi.Json
-
 data class MovieDetailEntity(
     val adult: Boolean,
     val id: Int,
