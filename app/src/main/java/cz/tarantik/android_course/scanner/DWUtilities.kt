@@ -43,20 +43,20 @@ object DWUtilities {
         sendDataWedgeIntentWithExtra(context, ACTION_DATAWEDGE, EXTRA_SET_CONFIG, profileConfig)
 
         //  You can only configure one plugin at a time, we have done the barcode input, now do the intent output
-        profileConfig.remove("PLUGIN_CONFIG")
-        val intentConfig = Bundle()
-        intentConfig.putString("PLUGIN_NAME", "INTENT")
-        intentConfig.putString("RESET_CONFIG", "true")
-        val intentProps = Bundle()
-        intentProps.putString("intent_output_enabled", "true")
-        intentProps.putString(
-            "intent_action",
-            context.resources.getString(R.string.activity_intent_filter_action)
-        )
-        intentProps.putString("intent_delivery", "0") //  StartActivity
-        intentConfig.putBundle("PARAM_LIST", intentProps)
-        profileConfig.putBundle("PLUGIN_CONFIG", intentConfig)
-        sendDataWedgeIntentWithExtra(context, ACTION_DATAWEDGE, EXTRA_SET_CONFIG, profileConfig)
+//        profileConfig.remove("PLUGIN_CONFIG")
+//        val intentConfig = Bundle()
+//        intentConfig.putString("PLUGIN_NAME", "INTENT")
+//        intentConfig.putString("RESET_CONFIG", "true")
+//        val intentProps = Bundle()
+//        intentProps.putString("intent_output_enabled", "true")
+//        intentProps.putString(
+//            "intent_action",
+//            context.resources.getString(R.string.activity_intent_filter_action)
+//        )
+//        intentProps.putString("intent_delivery", "0") //  StartActivity
+//        intentConfig.putBundle("PARAM_LIST", intentProps)
+//        profileConfig.putBundle("PLUGIN_CONFIG", intentConfig)
+//        sendDataWedgeIntentWithExtra(context, ACTION_DATAWEDGE, EXTRA_SET_CONFIG, profileConfig)
 
         //  Disable keyboard output
         profileConfig.remove("PLUGIN_CONFIG")

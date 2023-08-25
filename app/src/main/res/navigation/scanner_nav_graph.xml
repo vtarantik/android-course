@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scanner_nav_graph">
+    android:id="@+id/scanner_nav_graph"
+    app:startDestination="@id/a">
 
+    <fragment
+        android:id="@+id/a"
+        android:name="cz.tarantik.android_course.scanner.screens.A"
+        android:label="A" >
+        <action
+            android:id="@+id/action_a_to_b"
+            app:destination="@id/b" />
+    </fragment>
+    <fragment
+        android:id="@+id/b"
+        android:name="cz.tarantik.android_course.scanner.screens.B"
+        android:label="B" >
+        <action
+            android:id="@+id/action_b_to_c"
+            app:destination="@id/c" />
+        <action
+            android:id="@+id/action_b_to_e"
+            app:destination="@id/e" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/c"
+        android:name="cz.tarantik.android_course.scanner.screens.C"
+        android:label="C" >
+        <action
+            android:id="@+id/action_c_to_d"
+            app:destination="@id/d" />
+    </fragment>
+    <fragment
+        android:id="@+id/d"
+        android:name="cz.tarantik.android_course.scanner.screens.D"
+        android:label="D" >
+        <action
+            android:id="@+id/action_d_to_e"
+            app:destination="@id/e" />
+    </fragment>
+    <fragment
+        android:id="@+id/e"
+        android:name="cz.tarantik.android_course.scanner.screens.E"
+        android:label="E" />
 </navigation>

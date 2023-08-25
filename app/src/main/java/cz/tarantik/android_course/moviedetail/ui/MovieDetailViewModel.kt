@@ -1,7 +1,5 @@
 package cz.tarantik.android_course.moviedetail.ui
 
-import android.os.Bundle
-import androidx.lifecycle.SavedStateHandle
 import cz.tarantik.android_course.base.BaseViewModel
 import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDBEntity
 import cz.tarantik.android_course.moviedetail.data.local.MovieDetailDao

@@ -6,16 +6,23 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import cz.tarantik.android_course.scanner.domain.ScannerState
+import cz.tarantik.android_course.R
+import cz.tarantik.android_course.scanner.ui.ScannerStateUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 private const val TAG = "ScannerManager"
 private const val NOTIFICATION_ACTION = "com.symbol.datawedge.api.NOTIFICATION_ACTION"
 private const val NOTIFICATION_TYPE_SCANNER_STATUS = "SCANNER_STATUS"
 
-private const val SUSPEND = "suspend"
-private const val RESUME = "resume"
+private const val CMD_SUSPEND = "suspend"
+private const val CMD_RESUME = "resume"
+
+private const val ACTION_SCAN = "cz.tarantik.android_course.ACTION"
+private const val SCAN_KEY_SOURCE = "com.symbol.datawedge.source"
+private const val SCAN_KEY_LABEL_TYPE = "com.symbol.datawedge.label_type"
+private const val SCAN_DATA_STRING = "com.symbol.datawedge.data_string"
 
 class ScannerManager(
     private val appContext: Context,
@@ -27,9 +34,10 @@ class ScannerManager(
             if (action != null && action == "com.symbol.datawedge.api.RESULT_ACTION") {
                 val extras = intent.extras
                 if (extras != null) {
+
                     //user specified ID
                     val cmdID = extras.getString("COMMAND_IDENTIFIER")
-                    if (RESUME == cmdID || SUSPEND == cmdID) {
+                    if (CMD_RESUME == cmdID || CMD_SUSPEND == cmdID) {
                         //success or failure
                         val result = extras.getString("RESULT")
                         //Original command
@@ -45,6 +53,16 @@ class ScannerManager(
                                 "SuspendReceiver.onReceive.Error: Command:$command:$cmdID:$result,Code:$errorCode"
                             )
                         } else {
+                            when(cmdID) {
+                                CMD_RESUME -> _state.update { it.copy(
+                                    ScannerStatus.Resumed
+                                ) }
+                                CMD_SUSPEND -> _state.update {
+                                    it.copy(
+                                        ScannerStatus.Suspended
+                                    )
+                                }
+                            }
                             Log.d(
                                 TAG,
                                 "SuspendReceiver.onReceive.Success Command:$command:$cmdID:$result"
@@ -74,11 +92,24 @@ class ScannerManager(
         }
     }
 
-    private val _state = MutableStateFlow(ScannerState())
+    private val scannedDataReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent?.action
+            val bundle = intent?.extras
+
+            if(action == ACTION_SCAN) {
+                displayScanResult(intent)
+            }
+        }
+    }
+
+    private val _state = MutableStateFlow(ScannerStateUiModel())
     val status = _state.asStateFlow()
 
     init {
+        DWUtilities.CreateDWProfile(appContext)
         registerReceivers()
+        suspendScanner()
     }
 
     private fun suspendScanner() {
@@ -86,40 +117,40 @@ class ScannerManager(
             action = "com.symbol.datawedge.api.ACTION"
             putExtra("com.symbol.datawedge.api.SCANNER_INPUT_PLUGIN", "SUSPEND_PLUGIN")
             putExtra("SEND_RESULT", "true")
-            putExtra("COMMAND_IDENTIFIER", SUSPEND) //Unique identifier
+            putExtra("COMMAND_IDENTIFIER", CMD_SUSPEND) //Unique identifier
         }
         appContext.sendBroadcast(i)
     }
 
-    private fun resumeScanner() {
+    fun resumeScanner() {
         val i = Intent().apply {
             action = "com.symbol.datawedge.api.ACTION"
             putExtra("com.symbol.datawedge.api.SCANNER_INPUT_PLUGIN", "RESUME_PLUGIN")
             putExtra("SEND_RESULT", "true")
-            putExtra("COMMAND_IDENTIFIER", RESUME) //Unique identifier
+            putExtra("COMMAND_IDENTIFIER", CMD_RESUME) //Unique identifier
         }
         appContext.sendBroadcast(i)
     }
-//
-//    private fun enableScanner() {
-//        val i = Intent().apply {
-//            action = "com.symbol.datawedge.api.ACTION"
-//            putExtra("com.symbol.datawedge.api.SCANNER_INPUT_PLUGIN", "ENABLE_PLUGIN")
-//            putExtra("SEND_RESULT", "true")
-//            putExtra("COMMAND_IDENTIFIER", "MY_ENABLE_SCANNER") //Unique identifier
-//        }
-//        appContext.sendBroadcast(i)
-//    }
-//
-//    private fun disableScanner() {
-//        val i = Intent().apply {
-//            action = "com.symbol.datawedge.api.ACTION"
-//            putExtra("com.symbol.datawedge.api.SCANNER_INPUT_PLUGIN", "DISABLE_PLUGIN")
-//            putExtra("SEND_RESULT", "true")
-//            putExtra("COMMAND_IDENTIFIER", "MY_DISABLE_SCANNER") //Unique identifier
-//        }
-//        appContext.sendBroadcast(i)
-//    }
+
+    private fun enableScanner() {
+        val i = Intent().apply {
+            action = "com.symbol.datawedge.api.ACTION"
+            putExtra("com.symbol.datawedge.api.SCANNER_INPUT_PLUGIN", "ENABLE_PLUGIN")
+            putExtra("SEND_RESULT", "true")
+            putExtra("COMMAND_IDENTIFIER", "MY_ENABLE_SCANNER") //Unique identifier
+        }
+        appContext.sendBroadcast(i)
+    }
+
+    private fun disableScanner() {
+        val i = Intent().apply {
+            action = "com.symbol.datawedge.api.ACTION"
+            putExtra("com.symbol.datawedge.api.SCANNER_INPUT_PLUGIN", "DISABLE_PLUGIN")
+            putExtra("SEND_RESULT", "true")
+            putExtra("COMMAND_IDENTIFIER", "MY_DISABLE_SCANNER") //Unique identifier
+        }
+        appContext.sendBroadcast(i)
+    }
 
     private fun registerScannerStatusNotifications() {
         val bundle = Bundle().apply {
@@ -143,5 +174,25 @@ class ScannerManager(
 
         registerScannerStatusNotifications()
         appContext.registerReceiver(scannerStatusReceiver, IntentFilter())
+
+        val scanFilter = IntentFilter().apply {
+            addAction(appContext.resources.getString(R.string.activity_intent_filter_action))
+        }
+        appContext.registerReceiver(scannedDataReceiver, scanFilter)
+    }
+
+    private fun displayScanResult(scanIntent: Intent) {
+        val decodedSource =
+            scanIntent.getStringExtra(SCAN_KEY_SOURCE)
+        val decodedData =
+            scanIntent.getStringExtra(SCAN_DATA_STRING)
+        val decodedLabelType =
+            scanIntent.getStringExtra(SCAN_KEY_LABEL_TYPE)
+        val scan = "$decodedData [$decodedLabelType]"
+        _state.update {
+            it.copy(
+                scannedData = listOf(scan)
+            )
+        }
     }
 }
